@@ -1,0 +1,105 @@
+﻿<html ng-app="expenseCalculator">
+<head>
+    <title>Expense Calculator</title>
+    <link data-require="bootstrap-css@3.*" data-semver="3.3.6" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css"/>
+    <link rel="stylesheet" href="style.css"/>
+    <!--script(data-require='ui-bootstrap@*', data-semver='2.1.3', src='https://cdn.rawgit.com/angular-ui/bootstrap/gh-pages/ui-bootstrap-tpls-2.1.3.js')-->
+</head>
+<body ng-controller="costBenefitCalculatorController as calcCtrl">
+<ng-form name="expenseForm">
+    <div class="col-md-6">
+        <div class="panel panel-border">
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1>Inputs</h1>
+                        </div>
+                        <div class="col-md-6">
+                            <h1>Outputs</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Location</label>
+                            <select id="location" ng-model="calcCtrl.inputsProvided.location" ng-change="calcCtrl.onChangeLocation()">
+                                <option value="MUMBAI">Mumbai</option>
+                                <option value="PUNE">Pune</option>
+                                <option value="BANGALORE">Bangalore</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Solar system size (inkW)</label>
+                            <input id="systemSize" type="number" name="systemSize" ng-model="calcCtrl.outputs.systemSize"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Roof size</label>
+                            <input id="roofSize" type="number" name="roofSize" ng-model="calcCtrl.inputsProvided.roofSize" ng-change="calcCtrl.onChangeUnitsConsumedOrRoofSize()" placeholder="Sq ft"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Solar system cost</label>
+                            <input id="systemCost" type="number" name="systemCost" ng-model="calcCtrl.outputs.systemCost"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Electricity units consumed/month</label>
+                            <input id="unitsConsumed" type="number" name="unitsConsumed" ng-model="calcCtrl.inputsProvided.monthlyUnitsConsumed" ng-change="calcCtrl.onChangeUnitsConsumedOrRoofSize()" placeholder="kWh"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Solar units produced/month</label>
+                            <input id="monthlyUnitsProduced" type="number" name="monthlyUnitsProduced" ng-model="calcCtrl.internalConstraints.monthlyUnitsProduced"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Loan tenure (in years)</label>
+                            <select id="loanTenure" ng-model="calcCtrl.inputsProvided.loanTenure" ng-class="{'gray-out':!calcCtrl.outputs.systemCost}" ng-change="calcCtrl.onChangeLoanParameters()" ng-disabled="!calcCtrl.outputs.systemCost">
+                                <option value="">Select a value</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Monthly savings on electricity bill</label>
+                            <input id="monthlySavings" type="number" name="monthlySavings" ng-model="calcCtrl.outputs.monthlyBillSavings"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Loan amount</label>
+                            <input id="loanAmount" type="number" name="loanAmount" ng-model="calcCtrl.inputsProvided.loanAmount" ng-disabled="!calcCtrl.outputs.systemCost" ng-change="calcCtrl.onChangeLoanParameters()"/>
+                            <div id="error">{{calcCtrl.errorMessage}}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>EMI</label>
+                            <input id="EMI" type="number" name="EMI" ng-model="calcCtrl.outputs.monthlyEMI"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="calcCtrl.chart.data.length&gt;0 &amp;&amp; calcCtrl.chart.data[0].length&gt;0" class="col-md-6">
+        <div class="panel panel-border">
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <h1>Expense Comparison</h1>
+                    <canvas id="line" chart-data="calcCtrl.chart.data" chart-labels="calcCtrl.chart.labels" chart-series="calcCtrl.chart.series" chart-options="calcCtrl.chart.options" chart-dataset-override="calcCtrl.chart.datasetOverride" chart-click="calcCtrl.chart.onClick" ,canvas="" class="chart chart-line"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-form>
+<script src="angular.min.js"></script>
+<script data-require="ui-bootstrap@*" data-semver="2.1.3" src="https://cdn.rawgit.com/angular-ui/bootstrap/gh-pages/ui-bootstrap-tpls-2.1.3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js"></script>
+<script src="angular-chart.js"></script>
+<!--script(src="angular-chart.min.js")-->
+<script src="app.js"></script>
+<script src="costBenefitCalculatorController.js"></script>
+</body>
+</html>
